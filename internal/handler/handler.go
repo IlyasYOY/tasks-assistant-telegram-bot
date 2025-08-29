@@ -19,10 +19,12 @@ type Handler struct {
 	fallback CommandHandler
 }
 
+//go:generate go tool mockgen -typed -package=handler_test -destination=mock_command_handler_test.go . CommandHandler
 type CommandHandler interface {
 	Handle(msg *tgbotapi.Message) error
 }
 
+//go:generate go tool mockgen -typed -package=handler_test -destination=mock_message_sender_test.go . MessageSender
 type MessageSender interface {
 	Send(chatID int64, text string) error
 }
@@ -57,6 +59,7 @@ func (h *Handler) HandleUpdate(update *tgbotapi.Update) error {
 	if !slices.Contains(h.cfg.AllowedUserIDs, msg.From.ID) {
 		return fmt.Errorf("%w: %d", ErrUserIsNotAuthorized, msg.From.ID)
 	}
+
 	if !msg.IsCommand() {
 		if err := h.plain.Handle(msg); err != nil {
 			return fmt.Errorf(
