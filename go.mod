@@ -6,6 +6,7 @@ require (
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/openai/openai-go v1.12.0
 	github.com/pressly/goose/v3 v3.24.3
+	github.com/stretchr/testify v1.10.0
 	modernc.org/sqlite v1.38.2
 )
 
@@ -185,7 +186,6 @@ require (
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.2.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
-	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/tdakkota/asciicheck v0.4.1 // indirect
 	github.com/tetafro/godot v1.5.1 // indirect
@@ -238,5 +238,6 @@ require (
 tool (
 	github.com/gojuno/minimock/v3
 	github.com/golangci/golangci-lint/v2/cmd/golangci-lint
+	golang.org/x/tools/cmd/goimports
 	gotest.tools/gotestsum
 )

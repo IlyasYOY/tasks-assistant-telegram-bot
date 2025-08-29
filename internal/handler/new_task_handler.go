@@ -14,7 +14,7 @@ import (
 )
 
 type NewTaskHandler struct {
-	sender       MessageSender
+	sender   MessageSender
 	store    Store
 	cfg      *config.Config
 	aiClient *openai.Client
@@ -32,7 +32,7 @@ func NewNewTaskHandler(
 	aiClient *openai.Client,
 ) *NewTaskHandler {
 	return &NewTaskHandler{
-		sender:       sender,
+		sender:   sender,
 		store:    store,
 		cfg:      cfg,
 		aiClient: aiClient,

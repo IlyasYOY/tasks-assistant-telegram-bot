@@ -4,6 +4,10 @@
 generate: 
 	go generate ./...
 
+.PHONY: format
+format: 
+	go tool goimports -w .
+
 .PHONY: lint 
 lint:
 	go tool golangci-lint run --config=.golangci.yml ./...
