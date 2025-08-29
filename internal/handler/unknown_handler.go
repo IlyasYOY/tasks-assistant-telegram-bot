@@ -7,11 +7,11 @@ import (
 )
 
 type UnknownHandler struct {
-	bh *BotHelper
+	sender MessageSender
 }
 
-func NewUnknownHandler(bh *BotHelper) *UnknownHandler {
-	return &UnknownHandler{bh: bh}
+func NewUnknownHandler(sender MessageSender) *UnknownHandler {
+	return &UnknownHandler{sender: sender}
 }
 
 func (h *UnknownHandler) Handle(msg *tgbotapi.Message) error {
@@ -19,7 +19,7 @@ func (h *UnknownHandler) Handle(msg *tgbotapi.Message) error {
 		"❓ I don't understand the command %q. Use /help to see available commands.",
 		msg.Text,
 	)
-	if err := h.bh.Send(msg.Chat.ID, reply); err != nil {
+	if err := h.sender.Send(msg.Chat.ID, reply); err != nil {
 		return fmt.Errorf("sending unknown command reply: %w", err)
 	}
 	return nil

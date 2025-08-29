@@ -7,11 +7,11 @@ import (
 )
 
 type HelpHandler struct {
-	bh *BotHelper
+	sender MessageSender
 }
 
-func NewHelpHandler(bh *BotHelper) *HelpHandler {
-	return &HelpHandler{bh: bh}
+func NewHelpHandler(sender MessageSender) *HelpHandler {
+	return &HelpHandler{sender: sender}
 }
 
 func (h *HelpHandler) Handle(msg *tgbotapi.Message) error {
@@ -20,7 +20,7 @@ func (h *HelpHandler) Handle(msg *tgbotapi.Message) error {
 		"• The bot will immediately reply with the complete list of your tasks.\n" +
 		"• /start – greeting message\n" +
 		"• /help – this help text"
-	if err := h.bh.Send(msg.Chat.ID, helpText); err != nil {
+	if err := h.sender.Send(msg.Chat.ID, helpText); err != nil {
 		return fmt.Errorf("sending help reply: %w", err)
 	}
 	return nil

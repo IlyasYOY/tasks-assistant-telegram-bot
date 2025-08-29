@@ -9,13 +9,8 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-type CommandHandler interface {
-	Handle(msg *tgbotapi.Message) error
-}
-
 type Handler struct {
-	bot *tgbotapi.BotAPI
-	bh  *BotHelper
+	sender MessageSender
 
 	cfg *config.Config
 
@@ -24,21 +19,25 @@ type Handler struct {
 	fallback CommandHandler
 }
 
-func New(
-	bot *tgbotapi.BotAPI,
-	cfg *config.Config,
+type CommandHandler interface {
+	Handle(msg *tgbotapi.Message) error
+}
 
+type MessageSender interface {
+	Send(chatID int64, text string) error
+}
+
+func New(
+	cfg *config.Config,
+	sender MessageSender,
 	startHandler CommandHandler,
 	helpHandler CommandHandler,
 	newTaskHandler CommandHandler,
 	unknownHandler CommandHandler,
 ) *Handler {
-	bh := NewMessageSender(bot)
-
 	return &Handler{
-		bot: bot,
-		cfg: cfg,
-		bh:  bh,
+		cfg:    cfg,
+		sender: sender,
 		cmdMap: map[string]CommandHandler{
 			"start": startHandler,
 			"help":  helpHandler,

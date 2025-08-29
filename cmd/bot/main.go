@@ -11,6 +11,7 @@ import (
 
 	"github.com/IlyasYOY/tasks-assistant-tg-bot/internal/config"
 	"github.com/IlyasYOY/tasks-assistant-tg-bot/internal/handler"
+	"github.com/IlyasYOY/tasks-assistant-tg-bot/internal/handler/msgsender"
 	"github.com/IlyasYOY/tasks-assistant-tg-bot/internal/store"
 
 	"github.com/openai/openai-go"
@@ -38,11 +39,11 @@ func main() {
 		}
 	}()
 
-	sender := handler.NewMessageSender(bot)
+	sender := msgsender.NewMessageSender(bot)
 
 	h := handler.New(
-		bot,
 		cfg,
+		sender,
 		handler.NewStartHandler(sender),
 		handler.NewHelpHandler(sender),
 		handler.NewNewTaskHandler(sender, sqlStore, cfg, &aiClient),

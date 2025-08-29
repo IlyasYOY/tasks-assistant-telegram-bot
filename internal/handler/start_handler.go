@@ -7,17 +7,17 @@ import (
 )
 
 type StartHandler struct {
-	bh *BotHelper
+	sender MessageSender
 }
 
-func NewStartHandler(bh *BotHelper) *StartHandler {
-	return &StartHandler{bh: bh}
+func NewStartHandler(sender MessageSender) *StartHandler {
+	return &StartHandler{sender: sender}
 }
 
 func (h *StartHandler) Handle(msg *tgbotapi.Message) error {
 	reply := "👋 Hello! I'm *Tasks Assistant* – I can help you manage your tasks using AI.\n\n" +
 		"Just send me any text and I’ll treat it as a new task. I’ll always reply with the current task list."
-	if err := h.bh.Send(msg.Chat.ID, reply); err != nil {
+	if err := h.sender.Send(msg.Chat.ID, reply); err != nil {
 		return fmt.Errorf("sending start reply: %w", err)
 	}
 	return nil

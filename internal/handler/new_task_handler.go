@@ -14,7 +14,7 @@ import (
 )
 
 type NewTaskHandler struct {
-	bh       *BotHelper
+	sender       MessageSender
 	store    Store
 	cfg      *config.Config
 	aiClient *openai.Client
@@ -26,13 +26,13 @@ type Store interface {
 }
 
 func NewNewTaskHandler(
-	bh *BotHelper,
+	sender MessageSender,
 	store Store,
 	cfg *config.Config,
 	aiClient *openai.Client,
 ) *NewTaskHandler {
 	return &NewTaskHandler{
-		bh:       bh,
+		sender:       sender,
 		store:    store,
 		cfg:      cfg,
 		aiClient: aiClient,
@@ -62,7 +62,7 @@ func (h *NewTaskHandler) Handle(msg *tgbotapi.Message) error {
 		return fmt.Errorf("failed to set task: %w", setErr)
 	}
 
-	if err := h.bh.Send(msg.Chat.ID, fmt.Sprintf("# Tasks\n\n%s ", newTasks)); err != nil {
+	if err := h.sender.Send(msg.Chat.ID, fmt.Sprintf("# Tasks\n\n%s ", newTasks)); err != nil {
 		return fmt.Errorf("failed to send tasks message: %w", err)
 	}
 
@@ -84,7 +84,7 @@ func (h *NewTaskHandler) runAI(
 		},
 	)
 	if err != nil {
-		sendErr := h.bh.Send(
+		sendErr := h.sender.Send(
 			msg.Chat.ID,
 			fmt.Sprintf("❌ Failed to send message: %q", err.Error()),
 		)
@@ -95,7 +95,7 @@ func (h *NewTaskHandler) runAI(
 		return "", fmt.Errorf("AI request failed: %w", err)
 	}
 	if len(resp.Choices) == 0 {
-		if sendErr := h.bh.Send(msg.Chat.ID, "❌ AI returned no choices."); sendErr != nil {
+		if sendErr := h.sender.Send(msg.Chat.ID, "❌ AI returned no choices."); sendErr != nil {
 			return "", fmt.Errorf("failed to send message: %w", sendErr)
 		}
 		return "", ErrNoChoices
@@ -126,7 +126,7 @@ func (h *NewTaskHandler) validateUserInput(
 ) (string, error) {
 	userInput := strings.TrimSpace(msg.Text)
 	if userInput == "" {
-		if err := h.bh.Send(
+		if err := h.sender.Send(
 			msg.Chat.ID,
 			"❗️ I received an empty message – please type something.",
 		); err != nil {
