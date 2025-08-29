@@ -54,6 +54,29 @@ feat(handler): add unknown command handler
   - Don't parameterize tests with error.
 - Keep test files in the same package as the code they test (or use `package xxx_test` for black‑box testing).
 
+- **Arrange‑Act‑Assert (AAA) pattern**
+  - **Arrange** – Set up the test pre‑conditions: create any required objects, configure environment variables, and prepare input data.
+  - **Act** – Invoke the function or method under test.
+  - **Assert** – Verify the outcome using `require`/`assert` from **testify** (or the standard `testing` helpers).
+    * Fatal assertions (`require.*`) should be used for conditions that make further checks meaningless (e.g., error presence).
+    * Non‑fatal assertions (`assert.*`) can be used for additional property checks after the test has already passed the critical step.
+  - Keep each of the three sections visually separated (blank line or comment) so the test’s intent is instantly clear when reading the source.
+  - Example skeleton:
+    ```go
+    func TestSomething(t *testing.T) {
+        // Arrange
+        ctx := context.Background()
+        dep := NewDependency(t) // may use t.Setenv, testhelpers, etc.
+
+        // Act
+        got, err := dep.DoSomething(ctx, "input")
+
+        // Assert
+        require.NoError(t, err)
+        assert.Equal(t, "expected", got)
+    }
+    ```
+
 ## 5. Database Migrations
 
 - Migrations are written in SQL and live under `internal/store/migrations`.
