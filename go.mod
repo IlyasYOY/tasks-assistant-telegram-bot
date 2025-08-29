@@ -82,6 +82,7 @@ require (
 	github.com/go-xmlfmt/xmlfmt v1.1.3 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gofrs/flock v0.12.1 // indirect
+	github.com/gojuno/minimock/v3 v3.4.6 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golangci/dupl v0.0.0-20250308024227-f665c8d69b32 // indirect
 	github.com/golangci/go-printf-func-name v0.1.0 // indirect
@@ -235,6 +236,7 @@ require (
 )
 
 tool (
+	github.com/gojuno/minimock/v3
 	github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 	gotest.tools/gotestsum
 )

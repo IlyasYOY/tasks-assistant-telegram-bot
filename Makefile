@@ -1,5 +1,9 @@
 .DEFAULT_GOAL = verify
 
+.PHONY: generate
+generate: 
+	go generate ./...
+
 .PHONY: lint 
 lint:
 	go tool golangci-lint run --config=.golangci.yml ./...
