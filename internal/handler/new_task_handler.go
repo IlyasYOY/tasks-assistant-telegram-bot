@@ -20,6 +20,7 @@ type NewTaskHandler struct {
 	aiClient *openai.Client
 }
 
+//go:generate go tool mockgen -typed -package=handler_test -destination=mock_store_test.go . Store
 type Store interface {
 	Get(userID int64) (task.TasksText, error)
 	Set(userID int64, t task.TasksText) error
