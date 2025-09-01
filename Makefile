@@ -14,7 +14,7 @@ lint:
 
 .PHONY: test 
 test: 
-	go tool gotestsum ./... -race
+	go tool gotestsum --format testname -- -fullpath -failfast -race -shuffle=on ./... 
 
 .PHONY: build 
 build: 
@@ -22,7 +22,7 @@ build:
 
 .PHONY: test-watch 
 test-watch:
-	go tool gotestsum --watch -- ./...
+	go tool gotestsum --format testname --watch -- -fullpath -failfast -race -shuffle=on ./...
 
 .PHONY: verify 
 verify: lint test
