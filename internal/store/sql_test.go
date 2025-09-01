@@ -11,52 +11,42 @@ import (
 )
 
 func TestSQLStore_Get_EmptyWhenDBEmpty(t *testing.T) {
-	store := NewStore(t)
+	s := NewStore(t)
 
-	got, gotErr := store.Get(789)
+	got, gotErr := s.Get(789)
 
 	require.NoError(t, gotErr)
 	require.Empty(t, got)
 }
 
 func TestSQLStore_Get_ItemPresentWhenSetBefore(t *testing.T) {
-	store := NewStore(t)
-	err := store.Set(789, task.TasksText("test text"))
+	s := NewStore(t)
+	err := s.Set(789, task.TasksText("test text"))
 	require.NoError(t, err)
 
-	got, gotErr := store.Get(789)
+	got, gotErr := s.Get(789)
 
 	require.NoError(t, gotErr)
 	require.EqualValues(t, "test text", got)
 }
 
 func TestSQLStore_Set_ItemOverridenWhenSetBefore(t *testing.T) {
-	store := NewStore(t)
-	err := store.Set(789, task.TasksText("test text"))
+	s := NewStore(t)
+	err := s.Set(789, task.TasksText("test text"))
 	require.NoError(t, err)
 
-	gotSetErr := store.Set(789, task.TasksText("test text update"))
+	gotSetErr := s.Set(789, task.TasksText("test text update"))
 	require.NoError(t, gotSetErr)
-	got, gotErr := store.Get(789)
+	got, gotErr := s.Get(789)
 
 	require.NoError(t, gotErr)
 	require.EqualValues(t, "test text update", got)
 }
 
 func TestSQLStore_Set_OkWhenDBEmpty(t *testing.T) {
-	store := NewStore(t)
+	s := NewStore(t)
 
-	gotErr := store.Set(7, task.TasksText("task A"))
-
-	require.NoError(t, gotErr)
-}
-
-func TestSQLStore_Close(t *testing.T) {
-	db := NewTestDB(t)
-	store, gotErr := store.NewSQLStore(db)
-	require.NoError(t, gotErr)
-
-	gotErr = store.Close()
+	gotErr := s.Set(7, task.TasksText("task A"))
 
 	require.NoError(t, gotErr)
 }
@@ -65,15 +55,15 @@ func NewStore(t *testing.T) *store.SQLStore {
 	t.Helper()
 
 	db := NewTestDB(t)
-	store, gotErr := store.NewSQLStore(db)
-	require.NoError(t, gotErr)
+	s, newErr := store.NewSQLStore(db)
+	require.NoError(t, newErr, "create sql store")
 
 	t.Cleanup(func() {
-		closeErr := store.Close()
+		closeErr := s.Close()
 		require.NoError(t, closeErr, "close store")
 	})
 
-	return store
+	return s
 }
 
 func NewTestDB(t *testing.T) *sql.DB {
