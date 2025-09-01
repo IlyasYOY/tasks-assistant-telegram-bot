@@ -24,10 +24,8 @@ func (s *SQLStore) Get(userID int64) (task.TasksText, error) {
 		where user_id = ?
 	`, userID).Scan(&txt); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			// No tasks stored for this user.
 			return task.TasksText(""), nil
 		}
-		// Propagate other errors.
 		return task.TasksText(
 				"",
 			), fmt.Errorf(
